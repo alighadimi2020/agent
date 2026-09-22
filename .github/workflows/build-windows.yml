@@ -1,10 +1,10 @@
-name: Build Windows Agent
+name: Build Windows Service Agent
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
-      - name: Publish Windows Agent
+      - name: Publish Agent
         run: |
           dotnet publish App/ArioTjarat.Agent.csproj `
             -c Release `
@@ -29,8 +29,8 @@ jobs:
             -p:PublishTrimmed=false `
             -o publish
 
-      - name: Upload Windows Agent
+      - name: Upload Agent
         uses: actions/upload-artifact@v4
         with:
-          name: ArioTjarat-Agent-Windows
+          name: ArioTjarat-Agent-Windows-Service
           path: publish/ArioTjarat.Agent.exe
