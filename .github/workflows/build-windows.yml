@@ -1,0 +1,36 @@
+name: Build Windows Agent
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Publish Windows Agent
+        run: |
+          dotnet publish App/ArioTjarat.Agent.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:PublishTrimmed=false `
+            -o publish
+
+      - name: Upload Windows Agent
+        uses: actions/upload-artifact@v4
+        with:
+          name: ArioTjarat-Agent-Windows
+          path: publish/ArioTjarat.Agent.exe
